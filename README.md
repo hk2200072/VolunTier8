@@ -1,4 +1,3 @@
-VolunTier
 VolunTier is a web application that connects volunteers with meaningful community service opportunities. The platform facilitates event creation, volunteer applications, and event management in an efficient and organized manner.
 
 Features
