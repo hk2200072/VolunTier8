@@ -3,10 +3,15 @@ const sqlite3 = require('sqlite3').verbose();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 const path = require('path');
 
 const app = express();
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:3000',
+    credentials: true
+}));
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.static('public'));
 
@@ -68,8 +73,7 @@ db.serialize(() => {
 
 // Authentication middleware
 function authenticateToken(req, res, next) {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
+    const token = req.cookies.token;
 
     if (!token) {
         return res.status(401).json({ error: 'Authentication required' });
@@ -96,8 +100,28 @@ app.post('/api/login', (req, res) => {
             return res.status(401).json({ error: 'Invalid username or password' });
         }
 
-        const token = jwt.sign({ id: user.id, isAdmin: user.isAdmin }, 'your_jwt_secret');
-        res.json({ token, isAdmin: user.isAdmin });
+        const token = jwt.sign(
+            { id: user.id, isAdmin: user.isAdmin },
+            'your_jwt_secret',
+            { expiresIn: '24h' }
+        );
+
+        // Set secure cookie
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+            maxAge: 24 * 60 * 60 * 1000 // 24 hours
+        });
+
+        res.cookie('isAdmin', user.isAdmin, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+            maxAge: 24 * 60 * 60 * 1000
+        });
+
+        res.json({ success: true, isAdmin: user.isAdmin });
     });
 });
 
@@ -124,10 +148,28 @@ app.post('/api/register', (req, res) => {
                     return res.status(500).json({ error: 'Failed to create user' });
                 }
                 const token = jwt.sign({ id: this.lastID, isAdmin: false }, 'your_jwt_secret');
-                res.json({ token, isAdmin: false });
+                res.cookie('token', token, {
+                    httpOnly: true,
+                    secure: process.env.NODE_ENV === 'production',
+                    sameSite: 'strict',
+                    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+                });
+                res.cookie('isAdmin', false, {
+                    httpOnly: true,
+                    secure: process.env.NODE_ENV === 'production',
+                    sameSite: 'strict',
+                    maxAge: 24 * 60 * 60 * 1000
+                });
+                res.json({ success: true, isAdmin: false });
             }
         );
     });
+});
+
+app.post('/api/logout', (req, res) => {
+    res.clearCookie('token');
+    res.clearCookie('isAdmin');
+    res.json({ success: true });
 });
 
 // Event routes

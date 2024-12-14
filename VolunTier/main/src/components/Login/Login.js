@@ -14,13 +14,12 @@ const Login = ({ onLogin }) => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                credentials: 'include',
                 body: JSON.stringify({ username, password }),
             });
 
             const data = await response.json();
             if (response.ok) {
-                localStorage.setItem('token', data.token);
-                localStorage.setItem('isAdmin', data.isAdmin);
                 onLogin(data.isAdmin);
             } else {
                 setError(data.error);
