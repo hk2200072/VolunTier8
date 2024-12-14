@@ -85,21 +85,15 @@ npm start
 
 
 Access the application
-Frontend: http://localhost:3000
-Backend API: http://localhost:5000
+-Frontend: http://localhost:3000
+-Backend API: http://localhost:5000
 
 Default Admin Account
-Username: admin
-Password: 123
+-Username: admin
+-Password: 123
 
 
-Security Measures
-HttpOnly cookies for authentication
-Password hashing
-JWT token expiration
-CORS configuration
-Input validation
-Parameterized queries
+
 
 
 
