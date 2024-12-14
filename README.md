@@ -15,6 +15,23 @@ For Administrators
 - Manage event details and capacity
 - Review and process volunteer applications
 
+Backend Plugins
+- express (^4.18.2): Web application framework
+- bcryptjs (^2.4.3): Password hashing
+- cookie-parser (^1.4.7): Cookie parsing middleware
+- cors (^2.8.5): Cross-Origin Resource Sharing
+- dotenv (^16.3.1): Environment variables management
+- jsonwebtoken (^9.0.2): JWT authentication
+- sqlite3 (^5.1.6): SQLite database
+
+Frontend Plugins
+- react (^18.2.0): UI library
+- react-dom (^18.2.0): React DOM manipulation
+- react-router-dom (^6.20.0): Routing
+- react-scripts (5.0.1): React development scripts
+- @testing-library/jest-dom (^5.17.0): DOM testing utilities
+- @testing-library/react (^13.4.0): React testing utilities
+- web-vitals (^2.1.4): Web performance metrics
 
 Frontend
 - React.js
